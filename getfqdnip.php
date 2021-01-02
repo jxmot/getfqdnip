@@ -17,15 +17,26 @@
 // 
 putenv('RES_OPTIONS=retrans:1 retry:1 timeout:1 attempts:1');
 require_once dirname(__FILE__).'/fqdnvars.php';
-$hostip = filter_var(gethostbyname(FQDNHOST), FILTER_VALIDATE_IP);
 
-if($hostip !== false) {
-    //echo $hostip;
-    // overwrite any existing file
-    $fileid = fopen(FQDNFILE,'w');
-    fwrite($fileid, '{"hostip":"'.$hostip.'","hostname":"'.FQDNHOST.'"}');
-    fflush($fileid);
-    fclose($fileid);
+// Let's make sure that FQDNHOST contains a proper FQDN
+$hostname = FQDNHOST;
+// NOTE: FILTER_VALIDATE_DOMAIN is not availble in earlier 
+// versions of PHP
+if (version_compare(phpversion(), '7.0.0', '>=')) {
+    $hostname = filter_var(FQDNHOST, FILTER_VALIDATE_DOMAIN);
+}
+// will only be false if filter_var() fails
+if($hostname !== false) {
+    // Validate the IP address that gethostbyname() gives to us
+    $hostip = filter_var(gethostbyname(FQDNHOST), FILTER_VALIDATE_IP);
+    if($hostip !== false) {
+        //echo $hostip;
+        // overwrite any existing file
+        $fileid = fopen(FQDNFILE,'w');
+        fwrite($fileid, '{"hostip":"'.$hostip.'","hostname":"'.FQDNHOST.'"}');
+        fflush($fileid);
+        fclose($fileid);
+    }
 }
 exit(0);
 ?>
