@@ -79,5 +79,5 @@ echo $fqdndata->hostip ."\n";
 echo $fqdndata->hostname ."\n";
 ```
 
-
-
+---
+<img src="http://webexperiment.info/extcounter/mdcount.php?id=getfqdnip">
