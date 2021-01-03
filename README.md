@@ -25,7 +25,17 @@ The four primary files are:
 * `getfqdnip.php` - calls `gethostbyname()` to obtain the IP of the host and it writes the found IP to the JSON file.
 * `readfqdndata.php` - intended to be used by an PHP application, it reads the JSON file and saves an object in the `$fqdndata` variable
 
+There is also `indextest.php`. It can be requested by a browser, and it will display the host name and host IP.
+
 ### File Locations
+
+You may have to create a folder in your documents root named `php`. For example, the new folder would be at `/home/$USER/public_html/php`. 
+
+You may also have to create a folder in your documents root named `data`. This folder would be at `/home/$USER/public_html/data`.
+
+The `public_html` portion of the path is your server's *document root* folder, and may be named differently for your server.
+
+The `indextest.php` file can be placed anywhere in your document root.
 
 **NOTE**: Where the files are placed depends on **your** platform, and how it's been set up. For example, if your running on a typical Linux hosting server with cPanel then it's likely that the paths and file locations will closely match the examples here.
 
@@ -35,12 +45,17 @@ The first file you should look at is `getfqdnip.sh`:
 
 ```
 #!/bin/sh
-/usr/local/bin/php /home/$USER/public_html/data/getfqdnip.php
+/usr/local/bin/php /home/$USER/public_html/php/getfqdnip.php
 ```
 
-Depending on *where* you have placed the files on your server you may have to edit the `/home/$USER/public_html/data/getfqdnip.php` path. 
+Depending on *where* you have placed the files on your server you may have to edit the `/home/$USER/public_html/php/getfqdnip.php` path.
 
-**The next file** to edit is `fqdnvars.php`:
+Don't forget to make `getfqdnip.sh` *executable*. Use the following command:
+
+**`chmod +x getfqdnip.sh`**
+
+
+The next file to edit is `fqdnvars.php`:
 
 ```
 <?php
@@ -79,5 +94,35 @@ echo $fqdndata->hostip ."\n";
 echo $fqdndata->hostname ."\n";
 ```
 
+### Example Usage
+
+The `indextest.php` is provided for testing. It will retrieve the host information and display it in a bulleted list.
+
+Here is the file:
+
+```
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/php/readfqdndata.php';
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Test - readfqdndata.php</title>
+  </head>
+  <body>
+    <p>
+        <ul>
+            <li>FQDNHOST = <?php echo FQDNHOST; ?></li>
+            <li>FQDNFILE = <?php echo FQDNFILE; ?></li>
+        </ul>
+        <ul>
+            <li>hostip = <?php echo $fqdndata->hostip; ?></li>
+            <li>hostname = <?php echo $fqdndata->hostname; ?></li>
+        </ul>
+    </p>
+  </body>
+</html>
+```
 ---
 <img src="http://webexperiment.info/extcounter/mdcount.php?id=getfqdnip">
