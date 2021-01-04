@@ -10,11 +10,11 @@ Let's say you have a PHP script that requires the IP address of a *known* host. 
 
 One solution for our use case might be to resolve the FQDN *every time the endpoint is called*. In order to obtain the IP address we're interested in we'll call the PHP function `gethostbyname()`.
 
-Overall the would be calling `gethostbyname()` every time we needed the IP address. And it's possible that `gethostbyname()` could take longer than expected and affect the performance of our application.
+Overall we would be calling `gethostbyname()` every time we needed the IP address. And it's possible that `gethostbyname()` could take longer than expected and affect the performance of our application.
 
 ## The Solution
 
-Is to utilize a CRON to run our utility. The `getfqdnip.sh` file is the command we will give to CRON.
+Is to utilize a CRON to run our utility. The `getfqdnip.sh` file is the command we will give to CRON. That command will in turn run a PHP script that finds the IP address and saves it in a JSON file for later retreival.
 
 ## Set Up
 
